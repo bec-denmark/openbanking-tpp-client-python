@@ -1,2 +1,5 @@
 /.idea/
 /openbanking-tpp-client-python-github.iml
+*.cer
+*.key
+/src/openbanking_tpp_proxy/__pycache__/

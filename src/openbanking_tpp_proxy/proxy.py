@@ -1,8 +1,9 @@
-import hashlib
-import uuid
 import base64
-import requests
+import hashlib
 import re
+import uuid
+
+import requests
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
@@ -11,11 +12,12 @@ from cryptography.hazmat.primitives.asymmetric import dsa, ec, rsa
 from cryptography.hazmat.primitives.asymmetric import padding
 
 
-
 class Proxy(object):
 
-    def __init__(self, qwac_cert_file_path, qwac_key_file_path, qseal_cert_file_path, qseal_key_file_path) -> None:
+    def __init__(self, qwac_cert_file_path, qwac_key_file_path, qseal_cert_file_path, qseal_key_file_path,
+                 qseal_key_file_password=None) -> None:
         super().__init__()
+        self.pk_password = pk_password
         self.cert = (qwac_cert_file_path, qwac_key_file_path)
         self.qseal_key_file_path = qseal_key_file_path
         qseal_cert_data = self._get_cert_data(qseal_cert_file_path)
@@ -65,7 +67,7 @@ class Proxy(object):
     def _sign(self, private_key, data, algorithm=hashes.SHA256()):
         with open(private_key, 'rb') as private_key:
             key = serialization.load_pem_private_key(
-                private_key.read(), None, default_backend())
+                private_key.read(), self.pk_password, default_backend())
 
         return key.sign(data, **self._key_singing_config(key, algorithm))
 
@@ -83,7 +85,7 @@ class Proxy(object):
     def _get_cert_issuer(self, cert_data):
         return cert_data.issuer.rfc4514_string()
 
-    def proxy_request(self, method, api_url, body="", x_request_id=uuid.uuid4()):
+    def proxy_request(self, method, api_url, body="", x_request_id=str(uuid.uuid4())):
         body_digest = self._get_digest(body)
         signing_string = self.signing_string_template % (body_digest, x_request_id)
         raw_signed_string = self._sign(self.qseal_key_file_path, signing_string.encode('utf-8'))
@@ -97,3 +99,14 @@ class Proxy(object):
             "TPP-Signature-Certificate": self.tpp_sig_cert
         }
         return requests.request(method, api_url, data=body, verify=False, cert=self.cert, headers=headers)
+
+    def enroll_certificates(self, enrolment_url, ca_interm_file_path, ca_root_file_path, tppId, commercial_name,
+                            roles="[ \"PSP_AI\", \"PSP_PI\", \"PSP_IC\", \"PSP_AS\" ]"):
+        qwac_cert = self._get_certificate(self._get_cert_data(self.cert[0]))
+        ca_cert = self._get_certificate(self._get_cert_data(ca_interm_file_path))
+        ca_root = self._get_certificate(self._get_cert_data(ca_root_file_path))
+        tpp_sig_cert = self.tpp_sig_cert
+
+        body = '{ "tppid":"%s", "commercialname":"%s", "roles": %s, "qwaccert": { "certificate":"%s", "cacert":"%s", "chaincerts": [ { "cert":"%s" } ] }, "qsealcert":  { "certificate":"%s", "cacert":"%s", "chaincerts": [ { "cert":"%s" } ] }  } ' % \
+               (tppId, commercial_name, roles, qwac_cert, ca_cert, ca_root, tpp_sig_cert, ca_cert, ca_root)
+        return self.proxy_request("POST", enrolment_url, body)
