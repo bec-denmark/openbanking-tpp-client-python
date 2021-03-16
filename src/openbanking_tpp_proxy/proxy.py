@@ -17,7 +17,7 @@ class Proxy(object):
     def __init__(self, qwac_cert_file_path, qwac_key_file_path, qseal_cert_file_path, qseal_key_file_path,
                  qseal_key_file_password=None) -> None:
         super().__init__()
-        self.pk_password = pk_password
+        self.pk_password = qseal_key_file_password
         self.cert = (qwac_cert_file_path, qwac_key_file_path)
         self.qseal_key_file_path = qseal_key_file_path
         qseal_cert_data = self._get_cert_data(qseal_cert_file_path)
