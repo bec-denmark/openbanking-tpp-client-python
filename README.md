@@ -62,7 +62,7 @@ The sample call looks as follows:
 
 ```
 
-The sample usage can be found here: [a relative link](src/app.py)
+The sample usage can be found here: [app.py](src/app.py)
 
  
 
