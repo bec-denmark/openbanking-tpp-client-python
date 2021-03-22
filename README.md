@@ -30,10 +30,10 @@ the TPP is authorised to use.
 
 ## Installation
 
-To install package use:
+To install dependencies use `setup.py` script.
 
 ```bash
-python setup.py
+python setup.py install
 ```
 
 ### Purpose

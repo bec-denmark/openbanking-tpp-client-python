@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name=" openbanking-tpp-client-python",
+    name="openbanking-tpp-client-python",
     version="0.0.1",
     author="Przemyslaw Palak",
     author_email="przemek@palak.pl",
