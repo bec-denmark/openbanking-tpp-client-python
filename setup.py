@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="openbanking-tpp-client-python",
-    version="0.0.1",
+    version="0.1.0",
     author="Przemyslaw Palak",
     author_email="przemek@palak.pl",
     description="A tpp client library to call PSD2 API, taking care of security setup",
