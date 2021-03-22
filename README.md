@@ -67,3 +67,32 @@ enrollment_response = proxy.enroll_certificates("https://some.gateway.url/eidas/
 ```
 
 The sample usage can be found here: [app.py](src/app.py)
+
+### CLI usage
+
+CLI script provides usefull utility to perform TPP Certificate upload.
+To use it properly.
+#### Usage
+
+To enroll the certificates use cli script below, changing parametes to real ones. Example:
+
+```bash
+python enroll_certificates.py \
+  --api_url http://example.com
+  --tpp_id "NO-12345-ABC" \
+  --tpp_name "Awesome TPP" \
+  --qwac_cert "qwac_cert.cer" \
+  --qwac_key "qwac_key.key" \
+  --qseal_cert "qseal_cert.cer" \
+  --qseal_key "qseal_key.key" \
+  --intermediate_cert "intermediate.cer" \
+  --root_cert "root.cer"
+```
+
+#### Help
+
+To display help and information about arguments.
+
+```bash
+python enroll_certificates.py -h
+```

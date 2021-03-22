@@ -6,3 +6,4 @@
 build/
 dist/
 src/openbanking_tpp_client_python.egg-info/
+src/__pycache__/
