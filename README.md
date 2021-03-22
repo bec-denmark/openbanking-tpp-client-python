@@ -74,7 +74,9 @@ CLI script provides usefull utility to perform TPP Certificate upload.
 To use it properly.
 #### Usage
 
-To enroll the certificates use cli script below, changing parametes to real ones. Example:
+To enroll the certificates from the shell use cli script below. Please change parameters to real ones.
+
+**Example**
 
 ```bash
 python enroll_certificates.py \
