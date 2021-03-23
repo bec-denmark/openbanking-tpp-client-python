@@ -91,6 +91,26 @@ python enroll_certificates.py \
   --root_cert "root.cer"
 ```
 
+Optionally when you need to use proxy or QSEAL key password, you can append optional parameters.
+
+**Example**
+
+```bash
+python enroll_certificates.py \
+  --http_proxy "http://example.com:8080" \
+  --https_proxy "https://example.com:8080" \
+  --api_url http://example.com
+  --tpp_id "NO-12345-ABC" \
+  --tpp_name "Awesome TPP" \
+  --qwac_cert "qwac_cert.cer" \
+  --qwac_key "qwac_key.key" \
+  --qseal_cert "qseal_cert.cer" \
+  --qseal_key "qseal_key.key" \
+  --qseal_key_file_password "QSEAL KEY SECRET PASSWORD" \
+  --intermediate_cert "intermediate.cer" \
+  --root_cert "root.cer"
+```
+
 #### Help
 
 To display help and information about arguments.

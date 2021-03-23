@@ -15,8 +15,10 @@ from cryptography.hazmat.primitives.asymmetric import padding
 class Proxy(object):
 
     def __init__(self, qwac_cert_file_path, qwac_key_file_path, qseal_cert_file_path, qseal_key_file_path,
-                 qseal_key_file_password=None) -> None:
+                 qseal_key_file_password=None, http_proxy=None, https_proxy=None) -> None:
         super().__init__()
+        self.http_proxy = http_proxy
+        self.https_proxy = https_proxy
         self.pk_password = qseal_key_file_password
         self.cert = (qwac_cert_file_path, qwac_key_file_path)
         self.qseal_key_file_path = qseal_key_file_path
@@ -98,6 +100,14 @@ class Proxy(object):
             "Content-Type": "application/json",
             "TPP-Signature-Certificate": self.tpp_sig_cert
         }
+
+        if self.http_proxy or self.https_proxy:
+            proxies = {
+                "http": self.http_proxy,
+                "https": self.https_proxy
+            }
+            return requests.request(method, api_url, data=body, verify=False, cert=self.cert, headers=headers, proxies=proxies)
+
         return requests.request(method, api_url, data=body, verify=False, cert=self.cert, headers=headers)
 
     def enroll_certificates(self, enrolment_url, ca_interm_file_path, ca_root_file_path, tppId, commercial_name,
