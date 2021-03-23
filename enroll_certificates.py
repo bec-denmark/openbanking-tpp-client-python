@@ -23,11 +23,33 @@ if __name__ == '__main__':
                         help="Path intermediate certificate in DER format.")
     parser.add_argument('--root_cert', type=str, required=True,
                         help="Path root certificate in DER format.")
+    # Optional arguments
+    parser.add_argument('--qseal_key_file_password',
+                        default=None,
+                        type=str,
+                        required=False,
+                        help="(OPTIONAL) Password to qseal key file.")
+    parser.add_argument('--http_proxy',
+                        default=None,
+                        type=str,
+                        required=False,
+                        help="(OPTIONAL) HTTP proxy URI with port.")
+    parser.add_argument('--https_proxy',
+                        default=None,
+                        type=str,
+                        required=False,
+                        help="(OPTIONAL) HTTPS proxy URI with port.")
 
     args = parser.parse_args()
 
     # Enrollment process
-    proxy = Proxy(args.qwac_cert, args.qwac_key, args.qseal_cert, args.qseal_key)
+    proxy = Proxy(args.qwac_cert,
+                  args.qwac_key,
+                  args.qseal_cert,
+                  args.qseal_key,
+                  args.qseal_key_file_password,
+                  args.http_proxy,
+                  args.https_proxy)
     enrollment_path = args.api_url + "/eidas/1.0/v1/enrollment"
     enrollment_response = proxy.enroll_certificates(enrollment_path,
                                                     args.intermediate_cert,
